@@ -10,9 +10,20 @@ public class AccountPage extends BasePage{
     private By input = By.xpath("/html/body/div/div/div[2]/div/div[4]/div/form/div/input");
     private By button = By.xpath("/html/body/div/div/div[2]/div/div[4]/div/form/button");
     private By message = By.xpath("/html/body/div/div/div[2]/div/div[4]/div/span");
+    private By logout = By.xpath("/html/body/div/div/div[1]/button[2]");
+
 
     public AccountPage(WebDriver driver, WebDriverWait driverWait) {
         super(driver, driverWait);
+    }
+
+    public void withdrawal (String iznos) throws InterruptedException {
+        getDriver().findElement(withdrawal).click();
+        Thread.sleep(2000);
+        getDriver().findElement(input).sendKeys(iznos);
+        Thread.sleep(2000);
+        getDriver().findElement(button).click();
+        Thread.sleep(2000);
     }
 
 
@@ -23,9 +34,13 @@ public class AccountPage extends BasePage{
         getDriver().findElement(button).click();
 
     }
-    public String messageAfterDeposit () {
+    public String messageText () {
         getDriverWait().until(ExpectedConditions.visibilityOfElementLocated(message));
         return getDriver().findElement(message).getText();
+    }
+
+    public void logout () {
+        getDriver().findElement(logout).click();
     }
 
     public By getTransactions() {

@@ -7,6 +7,8 @@ public class ManagerPage extends BasePage{
     private By addCustomer = By.xpath("/html/body/div/div/div[2]/div/div[1]/button[1]");
     private By openAccount = By.xpath("/html/body/div/div/div[2]/div/div[1]/button[2]");
     private By customers = By.xpath("/html/body/div/div/div[2]/div/div[1]/button[3]");
+    private By homeBtn = By.xpath("/html/body/div/div/div[1]/button[1]");
+
 
 
     public ManagerPage(WebDriver driver, WebDriverWait driverWait) {
@@ -49,5 +51,9 @@ public class ManagerPage extends BasePage{
         getDriverWait().until(ExpectedConditions.elementToBeClickable(customers));
         getDriver().findElement(customers).click();
     }
+    public void logoutManager () {
+        getDriver().findElement(homeBtn).click();
+    }
+
 }
 

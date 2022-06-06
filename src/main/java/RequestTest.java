@@ -3,12 +3,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
-
 
 public class RequestTest {
     private WebDriver driver;
@@ -18,6 +18,7 @@ public class RequestTest {
     private AddCustomerPage addCustomerPage;
     private CustomerPage customerPage;
     private AccountPage accountPage;
+    private OpenAccountPage openAccountPage;
 
 
     @BeforeClass
@@ -33,6 +34,7 @@ public class RequestTest {
         addCustomerPage = new AddCustomerPage(driver,driverWait);
         customerPage = new CustomerPage(driver,driverWait);
         accountPage = new AccountPage(driver,driverWait);
+        openAccountPage = new OpenAccountPage(driver,driverWait);
         driver.navigate().to("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login");
     }
 
@@ -52,8 +54,21 @@ public class RequestTest {
     }
 
     @Test (priority = 3)
+    public void kreiranjeAcc () {
+        managerPage.clickOpenAccount();
+        openAccountPage.openAcc("Proba Prezime", "Pound");
+        Assert.assertTrue(openAccountPage.isAccOpenSuccessfully());
+        openAccountPage.acceptAlert();
+
+    }
+    @Test (priority = 4)
+    public void managerLogout () {
+        managerPage.logoutManager();
+        Assert.assertTrue(driver.getCurrentUrl().contains("login"));
+    }
+
+    @Test (priority = 5)
     public void testCustomerLogin () {
-        driver.navigate().to("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login");
         homePage.customerLogin();
         customerPage.customerLogin("Albus Dumbledore");
         driverWait.until(ExpectedConditions.urlContains("account"));
@@ -61,11 +76,25 @@ public class RequestTest {
 
     }
 
-    @Test (priority = 4)
-    public void uspesanDepozitTest () {
+    @Test (priority = 6)
+    public void uspesanDepozitTest () throws InterruptedException {
         accountPage.deposit("1000");
-        Assert.assertEquals(accountPage.messageAfterDeposit(), "Deposit Successful");
+        Assert.assertEquals(accountPage.messageText(), "Deposit Successful");
+        Thread.sleep(3000);
 
+    }
+
+    @Test (priority = 7)
+    public void uspesanWitjdr () throws InterruptedException {
+        accountPage.withdrawal("500");
+        Assert.assertTrue(accountPage.messageText().contains("Transaction successful"));
+    }
+
+
+    @Test (priority = 8)
+    public void logoutCustomer () {
+        accountPage.logout();
+        Assert.assertTrue(driver.getCurrentUrl().contains("customer"));
     }
 
     @AfterClass
